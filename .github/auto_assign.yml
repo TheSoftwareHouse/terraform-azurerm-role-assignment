@@ -1,0 +1,7 @@
+---
+addReviewers: false
+addAssignees: author
+useReviewGroups: false
+skipKeywords:
+  - wip
+runOnDraft: true

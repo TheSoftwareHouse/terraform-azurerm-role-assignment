@@ -1,0 +1,20 @@
+---
+# https://taskfile.dev
+version: '3'
+tasks:
+  install:tools:
+    desc: Install Management Tools
+    cmds:
+      - brew install coreutils curl git
+      - brew install asdf
+      - grep -q "libexec/asdf.sh" ~/.zshrc || echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> ${ZDOTDIR:-~}/.zshrc
+      - asdf plugin-list | grep -q terraform || asdf plugin-add terraform
+      - asdf plugin-list | grep -q terraform-docs || asdf plugin-add terraform-docs
+      - asdf plugin-list | grep -q tflint || asdf plugin-add tflint
+      - asdf plugin-list | grep -q terragrunt || asdf plugin-add terragrunt
+      - asdf plugin-list | grep -q pre-commit || asdf plugin-add pre-commit
+      - asdf plugin-list | grep -q trivy || asdf plugin-add trivy
+      - asdf plugin-list | grep -q terrascan || asdf plugin-add terrascan
+      - asdf plugin-list | grep -q checkov || asdf plugin-add checkov
+      - asdf install
+      - pre-commit install
