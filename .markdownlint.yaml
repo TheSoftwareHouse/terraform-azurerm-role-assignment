@@ -140,7 +140,7 @@ MD032: true
 # MD033/no-inline-html - Inline HTML
 MD033:
   # Allowed elements
-  allowed_elements: ["p", "img"]
+  allowed_elements: ["p", "img", "a", "br", "pre"]
 
 # MD034/no-bare-urls - Bare URL used
 MD034: true
