@@ -75,16 +75,9 @@ resource "azurerm_role_assignment" "service_principals" {
 #################################################################
 
 resource "azurerm_role_assignment" "principal_ids" {
-  for_each = {
-    for combination in toset(local.role_principal_id_combinations) :
-    "${combination.role_name}-${combination.principal_id}" => {
-      role_name    = combination.role_name
-      principal_id = combination.principal_id
-      scope        = combination.scope
-    } if combination.principal_id != null
-  }
+  count = length(local.role_principal_id_combinations)
 
-  scope                = each.value.scope
-  principal_id         = each.value.principal_id
-  role_definition_name = each.value.role_name
+  scope                = local.role_principal_id_combinations[count.index].scope
+  principal_id         = local.role_principal_id_combinations[count.index].principal_id
+  role_definition_name = local.role_principal_id_combinations[count.index].role_name
 }
