@@ -17,6 +17,7 @@ resource "azurerm_log_analytics_workspace" "this" {
 
 module "role_assignments" {
   source = "retoxx-dev/role-assignment/azurerm"
+  version = "1.0.1"
 
   role_assignments = [
     {

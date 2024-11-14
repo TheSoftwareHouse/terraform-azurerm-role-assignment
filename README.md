@@ -10,16 +10,16 @@ NOTE: Assigning the same role to the same user, group or service principal multi
 module "role_assignments" {
   source = "retoxx-dev/role-assignment/azurerm"
 
+  scope = azurerm_resource_group.this.id
+
   role_assignments = [
     {
       user_principal_names = ["user1@contoso.com"]
       role_names           = ["Reader", "Web Plan Contributor"]
-      scope                = azurerm_resource_group.this.id
     },
     {
       user_principal_names = ["user1@contoso.com", "user2@contoso.com"]
       role_names           = ["Reader", "Owner"]
-      scope                = azurerm_resource_group.this.id
     }
   ]
 }
@@ -31,11 +31,12 @@ The role `Reader` will be assigned to `user1@contoso.com` only once.
 module "role_assignments" {
   source = "retoxx-dev/role-assignment/azurerm"
 
+  scope = azurerm_resource_group.this.id
+
   role_assignments = [
     {
       user_principal_names = ["user1@contoso.com", "user2@contoso.com"]
       role_names           = ["Reader", "Web Plan Contributor"]
-      scope                = azurerm_resource_group.this.id
     }
   ]
 }
@@ -46,11 +47,12 @@ module "role_assignments" {
 module "role_assignments" {
   source = "retoxx-dev/role-assignment/azurerm"
 
+  scope = azurerm_resource_group.this.id
+
   role_assignments = [
     {
       group_names = ["group1", "group2", "group3"]
       role_names  = ["Reader", "Web Plan Contributor"]
-      scope       = azurerm_resource_group.this.id
     }
   ]
 }
@@ -61,11 +63,12 @@ module "role_assignments" {
 module "role_assignments" {
   source = "retoxx-dev/role-assignment/azurerm"
 
+  scope = azurerm_resource_group.this.id
+
   role_assignments = [
     {
       sp_names   = ["spname1", "spname2", "spname3"]
       role_names = ["Reader", "Web Plan Contributor"]
-      scope      = azurerm_resource_group.this.id
     }
   ]
 }
@@ -78,9 +81,9 @@ module "role_assignments" {
 
   role_assignments = [
     {
-      principal_ids   = ["00000000-0000-0000-0000-000000000000"]
-      role_names      = ["Reader", "Web Plan Contributor"]
       scope           = azurerm_resource_group.this.id
+      principal_ids   = ["spname1", "spname2", "spname3"]
+      role_names      = ["Reader", "Web Plan Contributor"]
     }
   ]
 }

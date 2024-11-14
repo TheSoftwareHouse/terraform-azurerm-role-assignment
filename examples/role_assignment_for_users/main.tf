@@ -8,7 +8,8 @@ resource "azurerm_resource_group" "this" {
 }
 
 module "role_assignments" {
-  source = "retoxx-dev/role-assignment/azurerm"
+  source  = "retoxx-dev/role-assignment/azurerm"
+  version = "1.0.1"
 
   role_assignments = [
     {
