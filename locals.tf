@@ -1,47 +1,59 @@
 locals {
-  group_assignments = flatten([
-    for ra in var.role_assignments : [
-      for group_name in ra.group_names : [
-        for role_name in ra.role_names : {
-          principal_name = group_name
-          principal_type = "Group"
-          role_name      = role_name
+  role_user_combinations = flatten([
+    for policy in var.role_assignments :
+    [
+      for role_name in policy.role_names :
+      [
+        for user_principal_name in policy.user_principal_names :
+        {
+          role_name           = role_name
+          user_principal_name = user_principal_name
+          scope               = policy.scope
         }
       ]
     ]
   ])
 
-  user_assignments = flatten([
-    for ra in var.role_assignments : [
-      for user_principal_name in ra.user_principal_names : [
-        for role_name in ra.role_names : {
-          principal_name = user_principal_name
-          principal_type = "User"
-          role_name      = role_name
+  role_group_combinations = flatten([
+    for policy in var.role_assignments :
+    [
+      for role_name in policy.role_names :
+      [
+        for group_name in policy.group_names :
+        {
+          role_name  = role_name
+          group_name = group_name
+          scope      = policy.scope
         }
       ]
     ]
   ])
 
-  sp_assignments = flatten([
-    for ra in var.role_assignments : [
-      for sp_name in ra.service_principal_names : [
-        for role_name in ra.role_names : {
-          principal_name = sp_name
-          principal_type = "ServicePrincipal"
-          role_name      = role_name
+  role_sp_combinations = flatten([
+    for policy in var.role_assignments :
+    [
+      for role_name in policy.role_names :
+      [
+        for sp_name in policy.sp_names :
+        {
+          role_name = role_name
+          sp_name   = sp_name
+          scope     = policy.scope
         }
       ]
     ]
   ])
 
-  principal_id_assignments = flatten([
-    for ra in var.role_assignments : [
-      for principal_id in ra.principal_ids : [
-        for role_name in ra.role_names : {
-          principal_id   = principal_id
-          principal_type = "ServicePrincipal"
-          role_name      = role_name
+  role_principal_id_combinations = flatten([
+    for policy in var.role_assignments :
+    [
+      for role_name in policy.role_names :
+      [
+        for principal_id in policy.principal_ids :
+        {
+          role_name    = role_name
+          principal_id = principal_id
+          scope        = policy.scope
         }
       ]
     ]

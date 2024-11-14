@@ -4,39 +4,50 @@ Terraform module that assigns `BUILT IN` IAM roles to groups, service principals
 
 ## Usage
 
-```terraform
+```hcl
+# Configure the Azure provider
 provider "azurerm" {
   features {}
 }
 
-provider "azuread" {}
-
+# Create a resource group to reference it in the role assignments module
 resource "azurerm_resource_group" "this" {
-  name     = "rg-example"
-  location = "West Europe"
+  name     = "rg-terraform-northeu-001"
+  location = "northeurope"
 }
 
-module "role_assignments" {
-  source  = "TheSoftwareHouse/role-assignment/azurerm"
-  version = "1.0.0"
+# Create a log analytics workspace to reference it in the role assignments module
+resource "azurerm_log_analytics_workspace" "this" {
+  name                = "log-terraform-northeu-001"
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
 
-  scope = azurerm_resource_group.this.id
+# Use the role assignments module to assign roles to groups, service principals and users
+module "role_assignments" {
+  source = "retoxx-dev/role-assignment/azurerm"
 
   role_assignments = [
     {
-      user_principal_names = ["test@example.com", "test2@example.com"]
-      role_names           = ["Contributor", "Reader"]
+      scope       = azurerm_resource_group.this.id
+      group_names = ["group1", "group2", "group3"]
+      role_names  = ["Reader", "Web Plan Contributor"]
     },
     {
-      group_names = ["Group1"]
-      role_names  = ["Reader"]
+      scope      = azurerm_log_analytics_workspace.this.id
+      sp_names   = ["spname1", "spname2", "spname3"]
+      role_names = ["Reader", "Web Plan Contributor"]
     },
     {
-      service_principal_names = ["test"]
-      role_names              = ["Contributor"]
+      scope                = azurerm_resource_group.this.id
+      user_principal_names = ["user1@contoso.com", "user2@contoso.com"]
+      role_names           = ["Reader", "Web Plan Contributor"]
     },
     {
-      principal_ids = ["00000000-0000-0000-0000-000000000000"]
+      scope         = azurerm_log_analytics_workspace.this.id
+      principal_ids = ["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"]
       role_names    = ["Reader"]
     }
   ]
